@@ -1,0 +1,145 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Firebase.Database;
+using Firebase.Database.Query;
+using Domain.Model.Entities;
+using Infrastructure.Dto;
+using Infrastructure.Mapper;
+using Application.Interface;
+
+namespace Infrastructure.Repo
+{
+    public class BlogPostFirebaseRepo : IBlogRepository
+    {
+        private readonly FirebaseClient _client;
+        private const string ArticlesNode = "articles";
+
+        public BlogPostFirebaseRepo(string firebaseUrl)
+        {
+            if (string.IsNullOrWhiteSpace(firebaseUrl))
+                throw new ArgumentException("Firebase URL non valido", nameof(firebaseUrl));
+
+            _client = new FirebaseClient(firebaseUrl);
+        }
+
+        public async Task SaveAsync(BlogPost article)
+        {
+            ArgumentNullException.ThrowIfNull(article);
+
+            var dto = article.ToPersistenceDto();
+
+            await _client
+                .Child(ArticlesNode)
+                .Child(article.Id.ToString())
+                .PutAsync(dto)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<BlogPost?> GetByIdAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return null;
+
+            var dto = await _client
+                .Child(ArticlesNode)
+                .Child(id)
+                .OnceSingleAsync<BlogPostPersistenceDto>()
+                .ConfigureAwait(false);
+
+            return dto == null ? null : dto.ToEntity();
+        }
+
+        public async Task<IEnumerable<BlogPost>> GetAllAsync()
+        {
+            var dtos = await _client
+                .Child(ArticlesNode)
+                .OnceAsync<BlogPostPersistenceDto>()
+                .ConfigureAwait(false);
+
+            return dtos
+                .Select(m => m.Object?.ToEntity())
+                .Where(e => e != null)
+                .Cast<BlogPost>()
+                .OrderByDescending(a => a.CreatedAt)
+                .ToList();
+        }
+
+        public async Task UpdateAsync(BlogPost article)
+        {
+            ArgumentNullException.ThrowIfNull(article);
+
+            var dto = article.ToPersistenceDto();
+
+            await _client
+                .Child(ArticlesNode)
+                .Child(article.Id.ToString())
+                .PutAsync(dto)
+                .ConfigureAwait(false);
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("ID non valido", nameof(id));
+
+            await _client
+                .Child(ArticlesNode)
+                .Child(id)
+                .DeleteAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<BlogPost>> GetArticleByTitleAsync(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return Array.Empty<BlogPost>();
+
+            var all = await GetAllAsync().ConfigureAwait(false);
+            return all
+                .Where(a => a.Title?.Contains(title, StringComparison.OrdinalIgnoreCase) == true)
+                .ToList();
+        }
+
+        public async Task<IEnumerable<BlogPost>> GetArticleByContentAsync(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+                return Array.Empty<BlogPost>();
+
+            var all = await GetAllAsync().ConfigureAwait(false);
+            return all
+                .Where(a => a.Content?.Contains(content, StringComparison.OrdinalIgnoreCase) == true)
+                .ToList();
+        }
+
+        public async Task<IEnumerable<BlogPost>> GetArticleByDateAsync(DateOnly date)
+        {
+            var all = await GetAllAsync().ConfigureAwait(false);
+            return all
+                .Where(a => DateOnly.FromDateTime(a.CreatedAt) == date)
+                .ToList();
+        }
+
+        public async Task<IEnumerable<BlogPost>> GetArticleInPeriodAsync(DateOnly startingDate, DateOnly finishingDate)
+        {
+            if (finishingDate < startingDate)
+                throw new ArgumentException("finishingDate deve essere >= startingDate");
+
+            var all = await GetAllAsync().ConfigureAwait(false);
+            return all
+                .Where(a =>
+                {
+                    var d = DateOnly.FromDateTime(a.CreatedAt);
+                    return d >= startingDate && d <= finishingDate;
+                })
+                .ToList();
+        }
+
+        public async Task<int> GetCountByDateAsync(DateOnly date)
+        {
+            var matches = await GetArticleByDateAsync(date).ConfigureAwait(false);
+            return matches.Count();
+        }
+    }
+}

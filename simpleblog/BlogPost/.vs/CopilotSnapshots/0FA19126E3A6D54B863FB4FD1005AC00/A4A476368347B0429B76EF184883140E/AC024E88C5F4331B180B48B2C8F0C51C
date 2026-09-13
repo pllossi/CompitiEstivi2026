@@ -1,0 +1,35 @@
+﻿using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace WpfUI.Converters
+{
+    public class UtcToLocalTimeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DateTime dateTime)
+            {
+                if (dateTime.Kind == DateTimeKind.Utc)
+                {
+                    return dateTime.ToLocalTime();
+                }
+                return dateTime;
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DateTime dateTime)
+            {
+                if (dateTime.Kind == DateTimeKind.Local)
+                {
+                    return dateTime.ToUniversalTime();
+                }
+                return dateTime;
+            }
+            return value;
+        }
+    }
+}

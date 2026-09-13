@@ -1,0 +1,202 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\infrastructure\\repo\\blogpostfirebaserepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\repo\\blogpostfirebaserepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA1829F-D5F1-4EC1-A254-4A32FB85A631}|src\\UI\\WpfUI\\WpfUI.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\src\\ui\\wpfui\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CA1829F-D5F1-4EC1-A254-4A32FB85A631}|src\\UI\\WpfUI\\WpfUI.csproj|solutionrelative:src\\ui\\wpfui\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA1829F-D5F1-4EC1-A254-4A32FB85A631}|src\\UI\\WpfUI\\WpfUI.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\src\\ui\\wpfui\\view\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3CA1829F-D5F1-4EC1-A254-4A32FB85A631}|src\\UI\\WpfUI\\WpfUI.csproj|solutionrelative:src\\ui\\wpfui\\view\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA1829F-D5F1-4EC1-A254-4A32FB85A631}|src\\UI\\WpfUI\\WpfUI.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\src\\ui\\wpfui\\viewmodel\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CA1829F-D5F1-4EC1-A254-4A32FB85A631}|src\\UI\\WpfUI\\WpfUI.csproj|solutionrelative:src\\ui\\wpfui\\viewmodel\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\obj\\Debug\\net8.0-windows\\View\\MainWindow.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\UI\\WpfUI\\obj\\Debug\\net8.0-windows\\View\\MainWindow.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C1829F-0360-4C31-9E82-DA8A54A6EDF6}|Application\\Application.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\application\\usecase\\blogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C1829F-0360-4C31-9E82-DA8A54A6EDF6}|Application\\Application.csproj|solutionrelative:application\\usecase\\blogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\infrastructure\\repo\\abstrrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\repo\\abstrrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\infrastructure\\repo\\textrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\repo\\textrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C1829F-0360-4C31-9E82-DA8A54A6EDF6}|Application\\Application.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\application\\interface\\iblogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C1829F-0360-4C31-9E82-DA8A54A6EDF6}|Application\\Application.csproj|solutionrelative:application\\interface\\iblogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C1829F-0360-4C31-9E82-DA8A54A6EDF6}|Application\\Application.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\application\\interface\\iblockservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C1829F-0360-4C31-9E82-DA8A54A6EDF6}|Application\\Application.csproj|solutionrelative:application\\interface\\iblockservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|c:\\users\\filip\\source\\repos\\blogpost\\blogpost\\infrastructure\\mapper\\persistencemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2732B98-6D81-420D-81BF-ED83B6BEFBD4}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\mapper\\persistencemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\App.xaml.cs",
+              "RelativeDocumentMoniker": "src\\UI\\WpfUI\\App.xaml.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\App.xaml.cs",
+              "RelativeToolTip": "src\\UI\\WpfUI\\App.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T16:41:36.759Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BlogPostFirebaseRepo.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Repo\\BlogPostFirebaseRepo.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Repo\\BlogPostFirebaseRepo.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Repo\\BlogPostFirebaseRepo.cs",
+              "RelativeToolTip": "Infrastructure\\Repo\\BlogPostFirebaseRepo.cs",
+              "ViewState": "AgIAANcAAAAAAAAAAAAiwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T15:48:16.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PersistenceMapper.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Mapper\\PersistenceMapper.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Mapper\\PersistenceMapper.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Mapper\\PersistenceMapper.cs",
+              "RelativeToolTip": "Infrastructure\\Mapper\\PersistenceMapper.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAIBZwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T15:43:21.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\View\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "src\\UI\\WpfUI\\View\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\View\\MainWindow.xaml",
+              "RelativeToolTip": "src\\UI\\WpfUI\\View\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T14:56:35.934Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\ViewModel\\MainViewModel.cs",
+              "RelativeDocumentMoniker": "src\\UI\\WpfUI\\ViewModel\\MainViewModel.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\ViewModel\\MainViewModel.cs",
+              "RelativeToolTip": "src\\UI\\WpfUI\\ViewModel\\MainViewModel.cs",
+              "ViewState": "AgIAAJUBAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T14:55:55.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainWindow.g.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\obj\\Debug\\net8.0-windows\\View\\MainWindow.g.cs",
+              "RelativeDocumentMoniker": "src\\UI\\WpfUI\\obj\\Debug\\net8.0-windows\\View\\MainWindow.g.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\src\\UI\\WpfUI\\obj\\Debug\\net8.0-windows\\View\\MainWindow.g.cs",
+              "RelativeToolTip": "src\\UI\\WpfUI\\obj\\Debug\\net8.0-windows\\View\\MainWindow.g.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAhwCEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T16:18:47.263Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TextRepository.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Repo\\TextRepository.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Repo\\TextRepository.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Repo\\TextRepository.cs",
+              "RelativeToolTip": "Infrastructure\\Repo\\TextRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:42:00.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IBlogRepository.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Application\\Interface\\IBlogRepository.cs",
+              "RelativeDocumentMoniker": "Application\\Interface\\IBlogRepository.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Application\\Interface\\IBlogRepository.cs",
+              "RelativeToolTip": "Application\\Interface\\IBlogRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:45:27.19Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IBlockService.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Application\\Interface\\IBlockService.cs",
+              "RelativeDocumentMoniker": "Application\\Interface\\IBlockService.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Application\\Interface\\IBlockService.cs",
+              "RelativeToolTip": "Application\\Interface\\IBlockService.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAA0wB0AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:45:16.528Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BlogService.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Application\\UseCase\\BlogService.cs",
+              "RelativeDocumentMoniker": "Application\\UseCase\\BlogService.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Application\\UseCase\\BlogService.cs",
+              "RelativeToolTip": "Application\\UseCase\\BlogService.cs",
+              "ViewState": "AgIAAKkAAAAAAAAAAIBZwK4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:42:13.794Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AbstrRepo.cs",
+              "DocumentMoniker": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Repo\\AbstrRepo.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Repo\\AbstrRepo.cs",
+              "ToolTip": "C:\\Users\\filip\\source\\repos\\blogpost\\BlogPost\\Infrastructure\\Repo\\AbstrRepo.cs",
+              "RelativeToolTip": "Infrastructure\\Repo\\AbstrRepo.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAADwv5QAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T15:42:01.524Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

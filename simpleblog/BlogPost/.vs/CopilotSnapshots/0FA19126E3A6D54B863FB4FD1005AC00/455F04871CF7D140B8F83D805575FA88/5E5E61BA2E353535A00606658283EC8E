@@ -1,0 +1,64 @@
+﻿using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace WpfUI.Converters
+{
+    /// <summary>
+    /// Converter WPF per convertire tra DateTime? e DateOnly?.
+    /// Necessario perché il controllo DatePicker di WPF lavora con DateTime,
+    /// mentre il ViewModel usa DateOnly (tipo introdotto in .NET 6).
+    /// 
+    /// Implementa IValueConverter per il binding bidirezionale nei controlli XAML.
+    /// </summary>
+    public class DateTimeToDateOnlyConverter : IValueConverter
+    {
+        /// <summary>
+        /// Converte da DateOnly? (usato nel ViewModel) a DateTime? (usato dal DatePicker).
+        /// Direzione: ViewModel → View
+        /// Chiamato quando il DatePicker deve visualizzare un valore dal ViewModel.
+        /// </summary>
+        /// <param name="value">Valore DateOnly? proveniente dal ViewModel</param>
+        /// <param name="targetType">Tipo target richiesto dalla View (DateTime?)</param>
+        /// <param name="parameter">Parametro opzionale dal binding (non usato)</param>
+        /// <param name="culture">Cultura per la conversione (non usata)</param>
+        /// <returns>DateTime? da mostrare nel DatePicker, oppure null</returns>
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Se il valore è un DateOnly valido
+            if (value is DateOnly dateOnly)
+            {
+                // Converte DateOnly in DateTime (aggiunge ora 00:00:00)
+                // TimeOnly.MinValue = mezzanotte (00:00:00)
+                return dateOnly.ToDateTime(TimeOnly.MinValue);
+            }
+            
+            // Se il valore è null o non è un DateOnly, ritorna null
+            return null;
+        }
+
+        /// <summary>
+        /// Converte da DateTime? (dal DatePicker) a DateOnly? (per il ViewModel).
+        /// Direzione: View → ViewModel
+        /// Chiamato quando l'utente seleziona una data nel DatePicker.
+        /// </summary>
+        /// <param name="value">Valore DateTime? selezionato nel DatePicker</param>
+        /// <param name="targetType">Tipo target richiesto dal ViewModel (DateOnly?)</param>
+        /// <param name="parameter">Parametro opzionale dal binding (non usato)</param>
+        /// <param name="culture">Cultura per la conversione (non usata)</param>
+        /// <returns>DateOnly? da salvare nel ViewModel, oppure null</returns>
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Se il valore è un DateTime valido
+            if (value is DateTime dateTime)
+            {
+                // Converte DateTime in DateOnly (elimina la parte oraria)
+                // Mantiene solo giorno, mese e anno
+                return DateOnly.FromDateTime(dateTime);
+            }
+            
+            // Se il valore è null o non è un DateTime, ritorna null
+            return null;
+        }
+    }
+}

@@ -1,0 +1,92 @@
+﻿using Application.Interface;
+using Domain.Model.Entities;
+using Application.Dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Application.Mapper;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Application.UseCase
+{
+    public class BlogService : IBlogService
+    {
+        private readonly IBlogRepository _repository;
+
+        public BlogService(IBlogRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task CreateArticleAsync(ArticleCreateDto articleDto)
+        {
+            var entity = articleDto.ToEntity();
+
+            await _repository.SaveAsync(entity);
+        }
+
+        public async Task<ArticleReadDto?> GetArticleByIdAsync(string id)
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null) return null;
+
+            return entity.ToArticleReadDto();
+        }
+
+        public async Task<IEnumerable<ArticleReadDto>> GetAllArticlesAsync()
+        {
+            var entities = await _repository.GetAllAsync();
+
+            return entities.Select(e => e.ToArticleReadDto());
+        }
+
+        public async Task UpdateArticleAsync(string id, ArticleCreateDto articleDto)
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                throw new InvalidOperationException($"Article {id} not found");
+
+            entity.Title = articleDto.Title;
+            entity.Content = articleDto.Content;
+
+            await _repository.UpdateAsync(entity);
+        }
+
+        public async Task DeleteArticleAsync(string id)
+        {
+            await _repository.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<ArticleReadDto>> GetArticleByTitleAsync(string title)
+        {
+            var articles = await _repository.GetArticleByTitleAsync(title);
+            return articles.Select(a => a.ToArticleReadDto());
+        }
+
+        public async Task<IEnumerable<ArticleReadDto>> GetArticleByContentAsync(string content)
+        {
+            var articles = await _repository.GetArticleByContentAsync(content);
+            return articles.Select(a => a.ToArticleReadDto());
+        }
+
+        public async Task<IEnumerable<ArticleReadDto>> GetArticleByDateAsync(DateOnly date)
+        {
+            var articles = await _repository.GetArticleByDateAsync(date);
+            return articles.Select(a => a.ToArticleReadDto());
+        }
+
+        public async Task<IEnumerable<ArticleReadDto>> GetArticleInPeriodAsync(DateOnly startingDate, DateOnly finishingDate)
+        {
+            var articles = await _repository.GetArticleInPeriodAsync(startingDate, finishingDate);
+            return articles.Select(a => a.ToArticleReadDto());
+        }
+
+        public async Task<int> GetCountByDateAsync(DateOnly date)
+        {
+            return await _repository.GetCountByDateAsync(date);
+        }
+    }
+
+}

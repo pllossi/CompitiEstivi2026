@@ -1,0 +1,24 @@
+﻿using Application.Interface;
+using Application.Dto;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+
+namespace WpfUI.ViewModel
+{
+    public partial class MainViewModel : ObservableObject
+    {
+        private readonly IBlogService _blogService;
+        [ObservableProperty]
+        private ObservableCollection<ArticleReadDto> _articles;
+        /*
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof())]
+        */
+    }
+}

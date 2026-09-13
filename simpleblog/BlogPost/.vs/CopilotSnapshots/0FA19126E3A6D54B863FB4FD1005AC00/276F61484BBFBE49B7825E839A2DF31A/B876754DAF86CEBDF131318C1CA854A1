@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Infrastructure.Dto;
+using Domain.Model.Entities;
+
+namespace Infrastructure.Mapper
+{
+    public static class PersistenceMapper
+    {
+        public static BlogPostPersistenceDto ToPersistenceDto(this BlogPost entity)
+        {
+            return new BlogPostPersistenceDto
+            (
+                entity.Id.ToString(),
+                entity.Title,
+                entity.Content,
+                ((DateTimeOffset)entity.CreatedAt).ToUnixTimeSeconds()
+            );
+        }
+
+        public static BlogPost ToEntity(this BlogPostPersistenceDto dto)
+        {
+            return new BlogPost
+            (
+                new Guid(dto.Id),
+                dto.Title,
+                dto.Content,
+                DateTimeOffset.FromUnixTimeSeconds(dto.Timestamp).LocalDateTime
+            );
+        }
+
+    }
+
+}

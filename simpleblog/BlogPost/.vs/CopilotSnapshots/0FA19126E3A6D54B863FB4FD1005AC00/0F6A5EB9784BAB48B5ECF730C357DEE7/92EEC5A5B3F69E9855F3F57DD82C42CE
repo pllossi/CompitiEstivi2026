@@ -1,0 +1,309 @@
+﻿using Application.Interface;
+using Application.Dto;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace WpfUI.ViewModel
+{
+    public partial class MainViewModel : ObservableObject
+    {
+        private readonly IBlogService _blogService;
+
+        public MainViewModel(IBlogService blogService)
+        {
+            _blogService = blogService;
+            Articles = new ObservableCollection<ArticleReadDto>();
+            LoadArticlesCommand.Execute(null);
+        }
+
+        [ObservableProperty]
+        private ObservableCollection<ArticleReadDto> _articles;
+
+        [ObservableProperty]
+        private ArticleReadDto? _selectedArticle;
+
+        [ObservableProperty]
+        private string _title = string.Empty;
+
+        [ObservableProperty]
+        private string _content = string.Empty;
+
+        [ObservableProperty]
+        private string _searchTitle = string.Empty;
+
+        [ObservableProperty]
+        private string _searchContent = string.Empty;
+
+        [ObservableProperty]
+        private DateOnly? _searchDate;
+
+        [ObservableProperty]
+        private DateOnly? _startDate;
+
+        [ObservableProperty]
+        private DateOnly? _endDate;
+
+        [ObservableProperty]
+        private string _statusMessage = string.Empty;
+
+        [RelayCommand]
+        private async Task LoadArticlesAsync()
+        {
+            try
+            {
+                var articles = await _blogService.GetAllArticlesAsync();
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Caricati {Articles.Count} articoli";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nel caricamento: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task CreateArticleAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                {
+                    StatusMessage = "Titolo e contenuto sono obbligatori";
+                    return;
+                }
+
+                var articleDto = new ArticleCreateDto(Title, Content);
+                await _blogService.CreateArticleAsync(articleDto);
+
+                Title = string.Empty;
+                Content = string.Empty;
+
+                await LoadArticlesAsync();
+                StatusMessage = "Articolo creato con successo";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nella creazione: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task UpdateArticleAsync()
+        {
+            try
+            {
+                if (SelectedArticle == null)
+                {
+                    StatusMessage = "Seleziona un articolo da modificare";
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                {
+                    StatusMessage = "Titolo e contenuto sono obbligatori";
+                    return;
+                }
+
+                var articleDto = new ArticleCreateDto(Title, Content);
+                await _blogService.UpdateArticleAsync(SelectedArticle.Id, articleDto);
+
+                Title = string.Empty;
+                Content = string.Empty;
+                SelectedArticle = null;
+
+                await LoadArticlesAsync();
+                StatusMessage = "Articolo aggiornato con successo";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nell'aggiornamento: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task DeleteArticleAsync()
+        {
+            try
+            {
+                if (SelectedArticle == null)
+                {
+                    StatusMessage = "Seleziona un articolo da eliminare";
+                    return;
+                }
+
+                var result = MessageBox.Show(
+                    $"Sei sicuro di voler eliminare l'articolo '{SelectedArticle.Title}'?",
+                    "Conferma eliminazione",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    await _blogService.DeleteArticleAsync(SelectedArticle.Id);
+                    SelectedArticle = null;
+                    await LoadArticlesAsync();
+                    StatusMessage = "Articolo eliminato con successo";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nell'eliminazione: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private void LoadSelectedArticle()
+        {
+            if (SelectedArticle != null)
+            {
+                Title = SelectedArticle.Title;
+                Content = SelectedArticle.Content;
+                StatusMessage = "Articolo caricato per la modifica";
+            }
+        }
+
+        [RelayCommand]
+        private void ClearForm()
+        {
+            Title = string.Empty;
+            Content = string.Empty;
+            SelectedArticle = null;
+            StatusMessage = "Form pulito";
+        }
+
+        [RelayCommand]
+        private async Task SearchByTitleAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(SearchTitle))
+                {
+                    StatusMessage = "Inserisci un titolo da cercare";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleByTitleAsync(SearchTitle);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Trovati {Articles.Count} articoli con titolo '{SearchTitle}'";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nella ricerca: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchByContentAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(SearchContent))
+                {
+                    StatusMessage = "Inserisci un contenuto da cercare";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleByContentAsync(SearchContent);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Trovati {Articles.Count} articoli con contenuto '{SearchContent}'";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nella ricerca: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchByDateAsync()
+        {
+            try
+            {
+                if (SearchDate == null)
+                {
+                    StatusMessage = "Seleziona una data";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleByDateAsync(SearchDate.Value);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Trovati {Articles.Count} articoli per la data {SearchDate.Value}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nella ricerca: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchByPeriodAsync()
+        {
+            try
+            {
+                if (StartDate == null || EndDate == null)
+                {
+                    StatusMessage = "Seleziona entrambe le date";
+                    return;
+                }
+
+                if (StartDate > EndDate)
+                {
+                    StatusMessage = "La data di inizio deve essere precedente alla data di fine";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleInPeriodAsync(StartDate.Value, EndDate.Value);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Trovati {Articles.Count} articoli nel periodo {StartDate.Value} - {EndDate.Value}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nella ricerca: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task GetCountByDateAsync()
+        {
+            try
+            {
+                if (SearchDate == null)
+                {
+                    StatusMessage = "Seleziona una data";
+                    return;
+                }
+
+                var count = await _blogService.GetCountByDateAsync(SearchDate.Value);
+                StatusMessage = $"Numero articoli per la data {SearchDate.Value}: {count}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Errore nel conteggio: {ex.Message}";
+            }
+        }
+    }
+}

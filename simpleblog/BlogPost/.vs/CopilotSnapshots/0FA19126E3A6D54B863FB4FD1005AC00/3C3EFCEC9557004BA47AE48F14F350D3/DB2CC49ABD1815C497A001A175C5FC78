@@ -1,0 +1,315 @@
+﻿using Application.Interface;
+using Application.Dto;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace WpfUI.ViewModel
+{
+    public partial class MainViewModel : ObservableObject
+    {
+        private readonly IBlogService _blogService;
+
+        public MainViewModel(IBlogService blogService)
+        {
+            _blogService = blogService;
+            Articles = new ObservableCollection<ArticleReadDto>();
+            LoadArticlesCommand.Execute(null);
+        }
+
+        [ObservableProperty]
+        private ObservableCollection<ArticleReadDto> _articles;
+
+        private ArticleReadDto? _selectedArticle;
+        public ArticleReadDto? SelectedArticle
+        {
+            get => _selectedArticle;
+            set
+            {
+                if (SetProperty(ref _selectedArticle, value) && value != null)
+                {
+                    Title = value.Title;
+                    Content = value.Content;
+                    StatusMessage = $"Article '{value.Title}' loaded for editing";
+                }
+            }
+        }
+
+        [ObservableProperty]
+        private string _title = string.Empty;
+
+        [ObservableProperty]
+        private string _content = string.Empty;
+
+        [ObservableProperty]
+        private string _searchTitle = string.Empty;
+
+        [ObservableProperty]
+        private string _searchContent = string.Empty;
+
+        [ObservableProperty]
+        private DateOnly? _searchDate;
+
+        [ObservableProperty]
+        private DateOnly? _startDate;
+
+        [ObservableProperty]
+        private DateOnly? _endDate;
+
+        [ObservableProperty]
+        private string _statusMessage = string.Empty;
+
+        [RelayCommand]
+        private async Task LoadArticlesAsync()
+        {
+            try
+            {
+                var articles = await _blogService.GetAllArticlesAsync();
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Loaded {Articles.Count} articles";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Loading error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task CreateArticleAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                {
+                    StatusMessage = "Title and content are required";
+                    return;
+                }
+
+                var articleDto = new ArticleCreateDto(Title, Content);
+                await _blogService.CreateArticleAsync(articleDto);
+
+                Title = string.Empty;
+                Content = string.Empty;
+                SelectedArticle = null;
+
+                await LoadArticlesAsync();
+                StatusMessage = "Article created successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Creation error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task UpdateArticleAsync()
+        {
+            try
+            {
+                if (SelectedArticle == null)
+                {
+                    StatusMessage = "Select an article to update";
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                {
+                    StatusMessage = "Title and content are required";
+                    return;
+                }
+
+                var articleDto = new ArticleCreateDto(Title, Content);
+                await _blogService.UpdateArticleAsync(SelectedArticle.Id, articleDto);
+
+                Title = string.Empty;
+                Content = string.Empty;
+                SelectedArticle = null;
+
+                await LoadArticlesAsync();
+                StatusMessage = "Article updated successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Update error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task DeleteArticleAsync()
+        {
+            try
+            {
+                if (SelectedArticle == null)
+                {
+                    StatusMessage = "Select an article to delete";
+                    return;
+                }
+
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete the article '{SelectedArticle.Title}'?",
+                    "Confirm deletion",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    await _blogService.DeleteArticleAsync(SelectedArticle.Id);
+                    
+                    Title = string.Empty;
+                    Content = string.Empty;
+                    SelectedArticle = null;
+                    
+                    await LoadArticlesAsync();
+                    StatusMessage = "Article deleted successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Deletion error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private void Deselect()
+        {
+            Title = string.Empty;
+            Content = string.Empty;
+            SelectedArticle = null;
+            StatusMessage = "Selection canceled";
+        }
+
+        [RelayCommand]
+        private async Task SearchByTitleAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(SearchTitle))
+                {
+                    StatusMessage = "Enter a title to search";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleByTitleAsync(SearchTitle);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles with title '{SearchTitle}'";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchByContentAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(SearchContent))
+                {
+                    StatusMessage = "Enter content to search";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleByContentAsync(SearchContent);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles with content '{SearchContent}'";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchByDateAsync()
+        {
+            try
+            {
+                if (SearchDate == null)
+                {
+                    StatusMessage = "Select a date";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleByDateAsync(SearchDate.Value);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles for date {SearchDate.Value}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchByPeriodAsync()
+        {
+            try
+            {
+                if (StartDate == null || EndDate == null)
+                {
+                    StatusMessage = "Select both dates";
+                    return;
+                }
+
+                if (StartDate > EndDate)
+                {
+                    StatusMessage = "Start date must be before end date";
+                    return;
+                }
+
+                var articles = await _blogService.GetArticleInPeriodAsync(StartDate.Value, EndDate.Value);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles in period {StartDate.Value} - {EndDate.Value}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task GetCountByDateAsync()
+        {
+            try
+            {
+                if (SearchDate == null)
+                {
+                    StatusMessage = "Select a date";
+                    return;
+                }
+
+                var count = await _blogService.GetCountByDateAsync(SearchDate.Value);
+                StatusMessage = $"Number of articles for date {SearchDate.Value}: {count}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Count error: {ex.Message}";
+            }
+        }
+    }
+}

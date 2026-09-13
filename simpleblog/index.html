@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Manager</title>
+    <script type="module" src="src/js/pages/index.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="src/img/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <header class="mb-2 head-col">
+        <h1 class="text-center text-white">
+            Blog Manager
+        </h1>
+    </header>
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div id="article-list-container">
+                    <h2>
+                        Lista di articoli
+                    </h2>
+                    <div class="row">
+                        <div class="col-12 d-flex gap-2">
+                            <button id="reload-articles-button" class="btn btn-info">Ricarica articoli</button>
+                        </div>
+                    </div>
+                    <div id="message-alert" class="mb-3"></div>
+                    <ul id="article-list" class="list-group mt-3 box-scorribile">
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div id="article-details-container">
+                    <h2>
+                        Dettagli dell'articolo
+                    </h2>
+                    <div class="col-12">
+                        <div class="row mt-3">
+                            <label for="article-title">
+                                Titolo
+                            </label>
+                            <textarea name="article-title" id="article-title-box"
+                                placeholder="Titolo dell'articolo"></textarea>
+                        </div>
+                        <div class="row mt-3">
+                            <label for="article-content">
+                                Contenuto
+                            </label>
+                            <textarea name="article-content" id="article-content"
+                                placeholder="Contenuto dell'articolo"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-6 d-grid">
+                            <button id="save-article-button" class="btn btn-success">
+                                Salva
+                            </button>
+                        </div>
+                        <div class="col-6 d-grid">
+                            <button id="delete-article-button" class="btn btn-danger">
+                                Elimina
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6 d-grid">
+                            <button id="edit-article-button" class="btn btn-warning">
+                                Modifica
+                            </button>
+                        </div>
+                        <div class="col-6 d-grid">
+                            <button id="cancel-article-button" class="btn btn-secondary">
+                                Annulla
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6 d-grid">
+                            <button id="new-article-button" class="btn btn-primary">
+                                Nuovo articolo
+                            </button>
+                        </div>
+                        <div class="col-6 d-grid">
+                            <button id="deselect-article-button" class="btn btn-info">
+                                Deseleziona articolo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div id="article-search-container">
+                    <h2>
+                        Filtri di ricerca
+                    </h2>
+                    <fieldset class="mb-3">
+                        <legend>Filtra per titolo (cerca in tempo reale)</legend>
+                        <input type="text" id="search-title" class="form-control"
+                            placeholder="Inserisci il titolo o autore da cercare">
+                        <div class="form-text">Digita per filtrare gli articoli per titolo o autore.</div>
+                    </fieldset>
+                    <fieldset class="mb-3">
+                        <legend>Filtra per contenuto</legend>
+                        <input type="text" id="search-content" class="form-control"
+                            placeholder="Inserisci il contenuto da cercare">
+                        <div class="row mt-2">
+                            <div class="col">
+                                <button id="search-content-button" class="btn btn-primary">
+                                    Cerca
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="mb-3">
+                        <legend>
+                            Filtra per data
+                        </legend>
+                        <input type="date" name="search-date" id="search-date" class="form-control">
+                        <div class="row mt-2">
+                            <div class="col">
+                                <button id="search-date-button" class="btn btn-primary">
+                                    Cerca
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="mb-3">
+                        <legend>
+                            Filtra per intervallo di date
+                        </legend>
+                        <div class="row">
+                            <div class="col">
+                                <label for="search-start-date">
+                                    Data inizio
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label for="search-end-date">
+                                    Data fine
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="date" name="search-start-date" id="search-start-date" class="form-control">
+                            </div>
+                            <div class="col">
+                                <input type="date" name="search-end-date" id="search-end-date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button id="search-date-range-button" class="btn btn-primary">
+                                    Cerca
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center text-white foot-col fixed-bottom">
+        <p>
+            Blog Manager - Boschi Filippo - 2026
+        </p>
+    </footer>
+</body>
+
+</html>

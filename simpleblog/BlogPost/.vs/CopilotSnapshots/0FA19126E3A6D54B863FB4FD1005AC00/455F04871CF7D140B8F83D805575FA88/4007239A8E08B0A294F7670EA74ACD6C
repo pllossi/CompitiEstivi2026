@@ -1,0 +1,427 @@
+﻿using Application.Interface;
+using Application.Dto;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace WpfUI.ViewModel
+{
+    /// <summary>
+    /// ViewModel principale per la gestione degli articoli del blog.
+    /// Utilizza il pattern MVVM con CommunityToolkit.Mvvm per il binding automatico.
+    /// </summary>
+    public partial class MainViewModel : ObservableObject
+    {
+        // Service per l'accesso ai dati degli articoli
+        private readonly IBlogService _blogService;
+
+        /// <summary>
+        /// Costruttore: inizializza il ViewModel e carica gli articoli all'avvio
+        /// </summary>
+        public MainViewModel(IBlogService blogService)
+        {
+            _blogService = blogService;
+            Articles = new ObservableCollection<ArticleReadDto>();
+            // Carica automaticamente tutti gli articoli all'avvio
+            LoadArticlesCommand.Execute(null);
+        }
+
+        /// <summary>
+        /// Collezione osservabile di articoli visualizzati nella lista.
+        /// Si aggiorna automaticamente quando viene modificata.
+        /// </summary>
+        [ObservableProperty]
+        private ObservableCollection<ArticleReadDto> _articles;
+
+        // Articolo attualmente selezionato nella lista
+        private ArticleReadDto? _selectedArticle;
+        
+        /// <summary>
+        /// Proprietà per l'articolo selezionato.
+        /// Quando viene selezionato un articolo, i suoi dati vengono caricati automaticamente nel form.
+        /// </summary>
+        public ArticleReadDto? SelectedArticle
+        {
+            get => _selectedArticle;
+            set
+            {
+                // Se l'articolo cambia e non è null, carica i dati nel form
+                if (SetProperty(ref _selectedArticle, value) && value != null)
+                {
+                    Title = value.Title;
+                    Content = value.Content;
+                    StatusMessage = $"Article '{value.Title}' loaded for editing";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Titolo dell'articolo nel form di modifica/creazione
+        /// </summary>
+        [ObservableProperty]
+        private string _title = string.Empty;
+
+        /// <summary>
+        /// Contenuto dell'articolo nel form di modifica/creazione
+        /// </summary>
+        [ObservableProperty]
+        private string _content = string.Empty;
+
+        /// <summary>
+        /// Titolo da cercare nei filtri di ricerca
+        /// </summary>
+        [ObservableProperty]
+        private string _searchTitle = string.Empty;
+
+        /// <summary>
+        /// Contenuto da cercare nei filtri di ricerca
+        /// </summary>
+        [ObservableProperty]
+        private string _searchContent = string.Empty;
+
+        /// <summary>
+        /// Data per la ricerca per data singola
+        /// </summary>
+        [ObservableProperty]
+        private DateOnly? _searchDate;
+
+        /// <summary>
+        /// Data di inizio per la ricerca per periodo
+        /// </summary>
+        [ObservableProperty]
+        private DateOnly? _startDate;
+
+        /// <summary>
+        /// Data di fine per la ricerca per periodo
+        /// </summary>
+        [ObservableProperty]
+        private DateOnly? _endDate;
+
+        /// <summary>
+        /// Messaggio di stato visualizzato nella barra inferiore
+        /// </summary>
+        [ObservableProperty]
+        private string _statusMessage = string.Empty;
+
+        /// <summary>
+        /// Comando per caricare tutti gli articoli dal database.
+        /// Svuota la lista corrente e la riempie con tutti gli articoli ordinati per data.
+        /// </summary>
+        [RelayCommand]
+        private async Task LoadArticlesAsync()
+        {
+            try
+            {
+                // Recupera tutti gli articoli dal service
+                var articles = await _blogService.GetAllArticlesAsync();
+                Articles.Clear();
+                
+                // Aggiunge ogni articolo alla collezione osservabile
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Loaded {Articles.Count} articles";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Loading error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per creare un nuovo articolo.
+        /// Valida i dati, crea l'articolo e ricarica la lista.
+        /// </summary>
+        [RelayCommand]
+        private async Task CreateArticleAsync()
+        {
+            try
+            {
+                // Validazione: titolo e contenuto obbligatori
+                if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                {
+                    StatusMessage = "Title and content are required";
+                    return;
+                }
+
+                // Crea il DTO e lo invia al service
+                var articleDto = new ArticleCreateDto(Title, Content);
+                await _blogService.CreateArticleAsync(articleDto);
+
+                // Pulisce il form dopo la creazione
+                Title = string.Empty;
+                Content = string.Empty;
+                SelectedArticle = null;
+
+                // Ricarica la lista per mostrare il nuovo articolo
+                await LoadArticlesAsync();
+                StatusMessage = "Article created successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Creation error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per aggiornare un articolo esistente.
+        /// Richiede che sia selezionato un articolo dalla lista.
+        /// </summary>
+        [RelayCommand]
+        private async Task UpdateArticleAsync()
+        {
+            try
+            {
+                // Validazione: deve essere selezionato un articolo
+                if (SelectedArticle == null)
+                {
+                    StatusMessage = "Select an article to update";
+                    return;
+                }
+
+                // Validazione: titolo e contenuto obbligatori
+                if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                {
+                    StatusMessage = "Title and content are required";
+                    return;
+                }
+
+                // Crea il DTO con i dati modificati e aggiorna l'articolo
+                var articleDto = new ArticleCreateDto(Title, Content);
+                await _blogService.UpdateArticleAsync(SelectedArticle.Id, articleDto);
+
+                // Pulisce il form dopo l'aggiornamento
+                Title = string.Empty;
+                Content = string.Empty;
+                SelectedArticle = null;
+
+                // Ricarica la lista per mostrare le modifiche
+                await LoadArticlesAsync();
+                StatusMessage = "Article updated successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Update error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per eliminare un articolo.
+        /// Mostra una finestra di conferma prima di procedere con l'eliminazione.
+        /// </summary>
+        [RelayCommand]
+        private async Task DeleteArticleAsync()
+        {
+            try
+            {
+                // Validazione: deve essere selezionato un articolo
+                if (SelectedArticle == null)
+                {
+                    StatusMessage = "Select an article to delete";
+                    return;
+                }
+
+                // Mostra un messaggio di conferma all'utente
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete the article '{SelectedArticle.Title}'?",
+                    "Confirm deletion",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                // Se l'utente conferma, procede con l'eliminazione
+                if (result == MessageBoxResult.Yes)
+                {
+                    await _blogService.DeleteArticleAsync(SelectedArticle.Id);
+                    
+                    // Pulisce il form
+                    Title = string.Empty;
+                    Content = string.Empty;
+                    SelectedArticle = null;
+                    
+                    // Ricarica la lista senza l'articolo eliminato
+                    await LoadArticlesAsync();
+                    StatusMessage = "Article deleted successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Deletion error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per deselezionare l'articolo corrente e pulire il form.
+        /// Utile per annullare una modifica o iniziare da zero.
+        /// </summary>
+        [RelayCommand]
+        private void Deselect()
+        {
+            Title = string.Empty;
+            Content = string.Empty;
+            SelectedArticle = null;
+            StatusMessage = "Selection canceled";
+        }
+
+        /// <summary>
+        /// Comando per cercare articoli per titolo.
+        /// La ricerca è case-insensitive e trova articoli che contengono il testo cercato.
+        /// </summary>
+        [RelayCommand]
+        private async Task SearchByTitleAsync()
+        {
+            try
+            {
+                // Validazione: il campo di ricerca non può essere vuoto
+                if (string.IsNullOrWhiteSpace(SearchTitle))
+                {
+                    StatusMessage = "Enter a title to search";
+                    return;
+                }
+
+                // Esegue la ricerca e aggiorna la lista con i risultati
+                var articles = await _blogService.GetArticleByTitleAsync(SearchTitle);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles with title '{SearchTitle}'";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per cercare articoli per contenuto.
+        /// La ricerca è case-insensitive e trova articoli che contengono il testo cercato.
+        /// </summary>
+        [RelayCommand]
+        private async Task SearchByContentAsync()
+        {
+            try
+            {
+                // Validazione: il campo di ricerca non può essere vuoto
+                if (string.IsNullOrWhiteSpace(SearchContent))
+                {
+                    StatusMessage = "Enter content to search";
+                    return;
+                }
+
+                // Esegue la ricerca e aggiorna la lista con i risultati
+                var articles = await _blogService.GetArticleByContentAsync(SearchContent);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles with content '{SearchContent}'";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per cercare articoli creati in una data specifica.
+        /// Trova tutti gli articoli creati nel giorno selezionato.
+        /// </summary>
+        [RelayCommand]
+        private async Task SearchByDateAsync()
+        {
+            try
+            {
+                // Validazione: deve essere selezionata una data
+                if (SearchDate == null)
+                {
+                    StatusMessage = "Select a date";
+                    return;
+                }
+
+                // Esegue la ricerca e aggiorna la lista con i risultati
+                var articles = await _blogService.GetArticleByDateAsync(SearchDate.Value);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles for date {SearchDate.Value}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per cercare articoli in un periodo di tempo.
+        /// Trova tutti gli articoli creati tra la data di inizio e la data di fine (incluse).
+        /// </summary>
+        [RelayCommand]
+        private async Task SearchByPeriodAsync()
+        {
+            try
+            {
+                // Validazione: entrambe le date devono essere selezionate
+                if (StartDate == null || EndDate == null)
+                {
+                    StatusMessage = "Select both dates";
+                    return;
+                }
+
+                // Validazione: la data di inizio deve essere prima della data di fine
+                if (StartDate > EndDate)
+                {
+                    StatusMessage = "Start date must be before end date";
+                    return;
+                }
+
+                // Esegue la ricerca e aggiorna la lista con i risultati
+                var articles = await _blogService.GetArticleInPeriodAsync(StartDate.Value, EndDate.Value);
+                Articles.Clear();
+                foreach (var article in articles)
+                {
+                    Articles.Add(article);
+                }
+                StatusMessage = $"Found {Articles.Count} articles in period {StartDate.Value} - {EndDate.Value}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Search error: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Comando per contare quanti articoli sono stati creati in una data specifica.
+        /// Non modifica la lista, mostra solo il conteggio nella barra di stato.
+        /// </summary>
+        [RelayCommand]
+        private async Task GetCountByDateAsync()
+        {
+            try
+            {
+                // Validazione: deve essere selezionata una data
+                if (SearchDate == null)
+                {
+                    StatusMessage = "Select a date";
+                    return;
+                }
+
+                // Ottiene il conteggio e lo mostra nella barra di stato
+                var count = await _blogService.GetCountByDateAsync(SearchDate.Value);
+                StatusMessage = $"Number of articles for date {SearchDate.Value}: {count}";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Count error: {ex.Message}";
+            }
+        }
+    }
+}
